@@ -67,7 +67,6 @@
 		38FB730F2572A9FA007D9CB0 /* RecordSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FB730E2572A9FA007D9CB0 /* RecordSessionViewController.swift */; };
 		38FB73162572AF63007D9CB0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 38FB73152572AF63007D9CB0 /* Shaders.metal */; };
 		709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
-		7092591A2E0B79AB00A7B62E /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -548,7 +547,6 @@
 				3863FE6A25FCBB0E00C1DA4F /* RecordButton.swift in Sources */,
 				3807421027BBD07D003194C1 /* PngEncoder.mm in Sources */,
 				3863FE6C25FCBB0E00C1DA4F /* SceneDelegate.swift in Sources */,
-				7092591A2E0B79AB00A7B62E /* ShareUtility.swift in Sources */,
 				38694C8126D2C66F00546EA1 /* DepthEncoder.swift in Sources */,
 				3863FE6E25FCBB0E00C1DA4F /* Recording+CoreDataProperties.swift in Sources */,
 				3863FE6F25FCBB0E00C1DA4F /* Recording+CoreDataClass.swift in Sources */,

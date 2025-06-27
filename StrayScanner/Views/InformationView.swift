@@ -28,7 +28,7 @@ This app lets you record video and depth datasets using the camera and LIDAR sca
                 bodyText("""
 The recorded datasets can be exported in several ways:
 
-1. Share directly from the app: Tap the "Share" button inside any recording to export it as a TAR archive via AirDrop, email, or save to Files.
+1. Share directly from the app: Tap the "Share" button inside any recording to export it as a ZIP archive via AirDrop, email, or save to Files.
 
 2. Connect your device with the lightning cable:
    • On Mac, access files through Finder sidebar > your device > "Files" tab > Stray Scanner
