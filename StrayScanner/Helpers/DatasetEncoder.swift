@@ -141,9 +141,23 @@ class DatasetEncoder {
                 self.hapticGenerator.impactOccurred()
             }
         }
+        
+        // Extract what we need from the frame before async dispatch
+        let capturedImage = frame.capturedImage
+        let sceneDepth = frame.sceneDepth
+        let frameTimestamp = frame.timestamp
+        let frameTransform = frame.camera.transform
+        
         dispatchGroup.enter()
-        queue.async {
-            if let sceneDepth = frame.sceneDepth {
+        queue.async { [weak self] in
+            defer {
+                // Always balance enter/leave, even if self is nil
+                self?.dispatchGroup.leave()
+            }
+            
+            guard let self = self else { return }
+            
+            if let sceneDepth = sceneDepth {
                 self.depthEncoder.encodeFrame(frame: sceneDepth.depthMap, frameNumber: frameNumber)
                 if let confidence = sceneDepth.confidenceMap {
                     self.confidenceEncoder.encodeFrame(frame: confidence, frameNumber: frameNumber)
@@ -153,10 +167,10 @@ class DatasetEncoder {
             } else {
                 print("warning: scene depth missing.")
             }
-            self.rgbEncoder.add(frame: VideoEncoderInput(buffer: frame.capturedImage, time: frame.timestamp), currentFrame: totalFrames)
+            
+            self.rgbEncoder.add(frame: VideoEncoderInput(buffer: capturedImage, time: frameTimestamp), currentFrame: frameNumber)
             self.odometryEncoder.add(frame: frame, currentFrame: frameNumber)
             self.lastFrame = frame
-            self.dispatchGroup.leave()
         }
         savedFrames = savedFrames + 1
     }
