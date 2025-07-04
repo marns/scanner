@@ -65,6 +65,9 @@
 		38E969CB2572608E00054CC4 /* NewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E969CA2572608E00054CC4 /* NewSession.swift */; };
 		38FB730F2572A9FA007D9CB0 /* RecordSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FB730E2572A9FA007D9CB0 /* RecordSessionViewController.swift */; };
 		38FB73162572AF63007D9CB0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 38FB73152572AF63007D9CB0 /* Shaders.metal */; };
+		706462D92E17A9500071744F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EBF2E0E46B1007E1315 /* SettingsView.swift */; };
+		706462DA2E17A9E60071744F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EBF2E0E46B1007E1315 /* SettingsView.swift */; };
+		70849EC42E0E4CE2007E1315 /* SettingsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */; };
 		709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 		70CF35492E17803700276207 /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 		70CF354B2E1792CE00276207 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CF354A2E1792CE00276207 /* Foundation.framework */; };
@@ -122,6 +125,8 @@
 		38FB731F2573EABB007D9CB0 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
 		38FB73242573ECE2007D9CB0 /* BridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BridgeHeader.h; path = StrayScanner/BridgeHeader.h; sourceTree = "<group>"; };
 		4555B6ABA66DC27F55685427 /* Pods-StrayScanner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrayScanner.debug.xcconfig"; path = "Target Support Files/Pods-StrayScanner/Pods-StrayScanner.debug.xcconfig"; sourceTree = "<group>"; };
+		70849EBF2E0E46B1007E1315 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConstants.swift; sourceTree = "<group>"; };
 		709259182E0B79AB00A7B62E /* ShareUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareUtility.swift; sourceTree = "<group>"; };
 		70CF354A2E1792CE00276207 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		84D33B01CC58FCEA4F9727CF /* Pods-StrayScanner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrayScanner.release.xcconfig"; path = "Target Support Files/Pods-StrayScanner/Pods-StrayScanner.release.xcconfig"; sourceTree = "<group>"; };
@@ -183,6 +188,7 @@
 		38045D562561A6D20004F23C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				70849EBF2E0E46B1007E1315 /* SettingsView.swift */,
 				38045D572561A7370004F23C /* SessionRow.swift */,
 				38045D592561AC000004F23C /* SessionList.swift */,
 				38E969CA2572608E00054CC4 /* NewSession.swift */,
@@ -220,6 +226,7 @@
 			children = (
 				38694C6B26D2C66F00546EA1 /* Helpers */,
 				387B576825EA55AC00132903 /* CCode */,
+				70849EC32E0E4CE2007E1315 /* Constants */,
 				38C17AE4259BCD16006B3FDA /* UI */,
 				38FB73142572AF50007D9CB0 /* Shaders */,
 				38FB730D2572A91D007D9CB0 /* Controllers */,
@@ -314,6 +321,14 @@
 				148E8CEABC0287C49B3E6B90 /* Pods_StrayScanner.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		70849EC32E0E4CE2007E1315 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -516,9 +531,11 @@
 				386E277825991163007D023B /* RecordButton.swift in Sources */,
 				385999BF25616F2B00F3F681 /* SceneDelegate.swift in Sources */,
 				709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */,
+				70849EC42E0E4CE2007E1315 /* SettingsConstants.swift in Sources */,
 				38694C8026D2C66F00546EA1 /* DepthEncoder.swift in Sources */,
 				38C17B13259BE1DA006B3FDA /* Recording+CoreDataProperties.swift in Sources */,
 				38C17B12259BE1DA006B3FDA /* Recording+CoreDataClass.swift in Sources */,
+				706462D92E17A9500071744F /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +558,7 @@
 				3863FE6625FCBB0E00C1DA4F /* SessionDetail.swift in Sources */,
 				3863FE6825FCBB0E00C1DA4F /* Stray_Scanner.xcdatamodeld in Sources */,
 				3863FE6925FCBB0E00C1DA4F /* SessionList.swift in Sources */,
+				706462DA2E17A9E60071744F /* SettingsView.swift in Sources */,
 				38694C8326D2C66F00546EA1 /* AppDaemon.swift in Sources */,
 				38694C7726D2C66F00546EA1 /* ConfidenceEncoder.swift in Sources */,
 				3863FE6A25FCBB0E00C1DA4F /* RecordButton.swift in Sources */,
