@@ -150,12 +150,17 @@ class DatasetEncoder {
         }
         let frameNumber: Int = savedFrames
         savedFrames = savedFrames + 1
+
         dispatchGroup.enter()
-        queue.async {
+        queue.async { [weak self] in
             defer {
-                self.encodingSemaphore.signal()
-                self.dispatchGroup.leave()
+                // Always balance the semaphore and enter/leave, even if self is nil.
+                self?.encodingSemaphore.signal()
+                self?.dispatchGroup.leave()
             }
+
+            guard let self = self else { return }
+
             if let sceneDepth = frame.sceneDepth {
                 self.depthEncoder.encodeFrame(frame: sceneDepth.depthMap, frameNumber: frameNumber)
                 if let confidence = sceneDepth.confidenceMap {
@@ -166,7 +171,8 @@ class DatasetEncoder {
             } else {
                 print("warning: scene depth missing.")
             }
-            self.rgbEncoder.add(frame: VideoEncoderInput(buffer: frame.capturedImage, time: frame.timestamp), currentFrame: totalFrames)
+
+            self.rgbEncoder.add(frame: VideoEncoderInput(buffer: frame.capturedImage, time: frame.timestamp), currentFrame: frameNumber)
             self.odometryEncoder.add(frame: frame, currentFrame: frameNumber)
             self.distortionEncoder.add(frame: frame, currentFrame: frameNumber)
             self.lastFrame = frame
