@@ -12,8 +12,8 @@ struct SettingsView: View {
     @AppStorage(AdaptiveThresholdPositionKey) private var adaptiveThresholdPosition: Double = DefaultAdaptiveThresholdPosition
     @AppStorage(AdaptiveThresholdAngleKey) private var adaptiveThresholdAngle: Double = DefaultAdaptiveThresholdAngle
     
-    @Environment(\.presentationMode) var presentationMode
-    
+    @Environment(\.dismiss) private var dismiss
+
     init() {
         // Ensure default values are stored in UserDefaults
         if UserDefaults.standard.object(forKey: AdaptiveThresholdPositionKey) == nil {
@@ -25,7 +25,7 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("Adaptive Mode")) {
                     VStack(alignment: .leading, spacing: 10) {
@@ -75,9 +75,9 @@ struct SettingsView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }
             }
@@ -85,8 +85,6 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
+#Preview {
+    SettingsView()
 }

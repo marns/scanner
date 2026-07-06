@@ -131,11 +131,13 @@ class RecordButton : UIView {
         disk.add(animationGroup, forKey: "cornerRadius")
     }
 
-    @objc override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        drawInner()
-        drawEdge()
-        self.backgroundColor = UIColor.clear
+    @objc override nonisolated func prepareForInterfaceBuilder() {
+        MainActor.assumeIsolated {
+            super.prepareForInterfaceBuilder()
+            drawInner()
+            drawEdge()
+            self.backgroundColor = UIColor.clear
+        }
     }
 
     private func cornerRadius(recording: Bool) -> CGFloat {

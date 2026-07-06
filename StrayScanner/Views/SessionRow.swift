@@ -28,15 +28,7 @@ struct SessionRow: View {
     }
     
     private func sessionTitle() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .short
-        
-        if let created = session.createdAt {
-            return dateFormatter.string(from: created)
-        } else {
-            return "Session"
-        }
+        session.createdAt.formatted(date: .long, time: .shortened)
     }
 }
 
