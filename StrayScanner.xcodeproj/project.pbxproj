@@ -634,7 +634,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = StrayScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -662,7 +662,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = StrayScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -689,7 +689,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StrayScanner/Info-debug.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -716,7 +716,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StrayScanner/Info-debug.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -743,7 +743,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2QREBG9C6Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StrayScannerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -767,7 +767,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2QREBG9C6Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StrayScannerTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
