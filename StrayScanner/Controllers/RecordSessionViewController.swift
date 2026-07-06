@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Metal
 import ARKit
-import CoreData
+import SwiftData
 import CoreMotion
 
 // Settings constants are now in SettingsConstants.swift
@@ -26,7 +26,7 @@ class MetalView : UIView {
     }
 }
 
-class RecordSessionViewController : UIViewController, ARSessionDelegate {
+class RecordSessionViewController : UIViewController, @preconcurrency ARSessionDelegate {
     private var unsupported: Bool = false
     private var arConfiguration: ARWorldTrackingConfiguration?
     private let session = ARSession()
@@ -34,7 +34,7 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
     private var renderer: CameraRenderer?
     private var updateLabelTimer: Timer?
     private var startedRecording: Date?
-    private var dataContext: NSManagedObjectContext!
+    var modelContext: ModelContext!
     private var datasetEncoder: DatasetEncoder?
     private let imuOperationQueue = OperationQueue()
     private var chosenFpsSetting: Int = 0
@@ -49,13 +49,13 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
         self.dismissFunction = fn
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.chosenFpsSetting = UserDefaults.standard.integer(forKey: FpsUserDefaultsKey)
         updateFpsSetting()
     }
 
     override func viewDidLoad() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        self.dataContext = appDelegate.persistentContainer.newBackgroundContext()
+        super.viewDidLoad()
         self.renderer = CameraRenderer(rgbLayer: rgbView.layer, depthLayer: depthView.layer)
 
         depthView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
@@ -74,15 +74,18 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        session.pause();
+        super.viewDidDisappear(animated)
+        session.pause()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         updateLabelTimer?.invalidate()
         datasetEncoder = nil
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         startSession()
     }
 
@@ -99,6 +102,7 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
     }
     
     private func startRawIMU() {
+        guard let encoder = datasetEncoder else { return }
         if self.motionManager.isAccelerometerAvailable {
             self.motionManager.accelerometerUpdateInterval = 1.0 / 1200.0 // Set update rate
             self.motionManager.startAccelerometerUpdates(to: imuOperationQueue) { (data, error) in
@@ -108,7 +112,7 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
                     }
                     return
                 }
-                self.datasetEncoder?.addRawAccelerometer(data: data)
+                encoder.addRawAccelerometer(data: data)
             }
         } else {
             print("Accelerometer not available on this device.")
@@ -123,7 +127,7 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
                     }
                     return
                 }
-                self.datasetEncoder?.addRawGyroscope(data: data)
+                encoder.addRawGyroscope(data: data)
             }
         } else {
             print("Gyroscope not available on this device.")
@@ -158,8 +162,10 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
     private func startRecording() {
         self.startedRecording = Date()
         updateTime()
-        updateLabelTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            self.updateTime()
+        updateLabelTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.updateTime()
+            }
         }
         // Use fpsDivider of 1 for adaptive mode (adaptive logic handles frame skipping)
         let fpsDivider = chosenFpsSetting == AdaptiveModeIndex ? 1 : FpsDividers[chosenFpsSetting]
@@ -172,41 +178,45 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
             print("Hasn't started recording. Something is wrong.")
             return
         }
+        guard let encoder = datasetEncoder else {
+            print("No dataset encoder. Something is wrong.")
+            return
+        }
         startedRecording = nil
         updateLabelTimer?.invalidate()
         updateLabelTimer = nil
-        // Stop IMU updates
         stopRawIMU()
-        datasetEncoder?.wrapUp()
-        if let encoder = datasetEncoder {
-            switch encoder.status {
+
+        // Flushing the remaining frames and finalizing the video file happens
+        // asynchronously; keep the UI responsive but locked while it runs.
+        recordButton.isUserInteractionEnabled = false
+        timeLabel.text = "Saving…"
+        Task {
+            let status = await encoder.wrapUp()
+            switch status {
                 case .allGood:
                     saveRecording(started, encoder)
-                case .videoEncodingError:
-                    showError()
-                case .directoryCreationError:
+                case .videoEncodingError, .directoryCreationError:
                     showError()
             }
-        } else {
-            print("No dataset encoder. Something is wrong.")
+            datasetEncoder = nil
+            self.dismissFunction?()
         }
-        self.dismissFunction?()
     }
 
     private func saveRecording(_ started: Date, _ encoder: DatasetEncoder) {
         let sessionCount = countSessions()
-        
         let duration = Date().timeIntervalSince(started)
-        let entity = NSEntityDescription.entity(forEntityName: "Recording", in: self.dataContext)!
-        let recording: Recording = Recording(entity: entity, insertInto: self.dataContext)
-        recording.setValue(datasetEncoder!.id, forKey: "id")
-        recording.setValue(duration, forKey: "duration")
-        recording.setValue(started, forKey: "createdAt")
-        recording.setValue("Recording \(sessionCount)", forKey: "name")
-        recording.setValue(datasetEncoder!.rgbFilePath.relativeString, forKey: "rgbFilePath")
-        recording.setValue(datasetEncoder!.depthFilePath.relativeString, forKey: "depthFilePath")
+        let recording = Recording(
+            id: encoder.id,
+            name: "Recording \(sessionCount)",
+            createdAt: started,
+            duration: duration,
+            rgbFilePath: encoder.rgbFilePath.relativeString,
+            depthFilePath: encoder.depthFilePath.relativeString)
+        modelContext.insert(recording)
         do {
-            try self.dataContext.save()
+            try modelContext.save()
         } catch let error as NSError {
             print("Could not save recording. \(error), \(error.userInfo)")
         }
@@ -293,11 +303,8 @@ class RecordSessionViewController : UIViewController, ARSessionDelegate {
     }
     
     private func countSessions() -> Int {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return 0 }
-        let request = NSFetchRequest<NSManagedObject>(entityName: "Recording")
         do {
-            let fetched: [NSManagedObject] = try appDelegate.persistentContainer.viewContext.fetch(request)
-            return fetched.count
+            return try modelContext.fetchCount(FetchDescriptor<Recording>())
         } catch let error {
             print("Could not fetch sessions for counting. \(error.localizedDescription)")
         }

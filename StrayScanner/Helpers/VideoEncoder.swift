@@ -7,55 +7,72 @@
 //
 
 import Foundation
-import ARKit
+import AVFoundation
+import CoreVideo
 
-struct VideoEncoderInput {
+nonisolated struct VideoEncoderInput: @unchecked Sendable {
     let buffer: CVPixelBuffer
     let time: TimeInterval // Relative to boot time.
 }
 
-class VideoEncoder {
+nonisolated final class VideoEncoder {
     enum EncodingStatus {
         case allGood
         case error
     }
-    
+
     private var videoWriter: AVAssetWriter?
     private var videoWriterInput: AVAssetWriterInput?
     private var videoAdapter: AVAssetWriterInputPixelBufferAdaptor?
     private let timeScale = CMTimeScale(60)
     public let width: CGFloat
     public let height: CGFloat
-    private let systemBootedAt: TimeInterval
-    private var done: Bool = false
     private var previousFrame: Int = -1
     public var filePath: URL
     public var status: EncodingStatus = EncodingStatus.allGood
 
     init(file: URL, width: CGFloat, height: CGFloat) {
-        self.systemBootedAt = ProcessInfo.processInfo.systemUptime
         self.filePath = file
         self.width = width
         self.height = height
         initializeFile()
     }
 
-    func finishEncoding() {
-        self.doneRecording()
-    }
-
-    func add(frame: VideoEncoderInput, currentFrame: Int) {
+    func add(frame: VideoEncoderInput, currentFrame: Int) async {
+        guard let input = videoWriterInput, let writer = videoWriter else { return }
         previousFrame = currentFrame
-        while !videoWriterInput!.isReadyForMoreMediaData {
-            print("Sleeping.")
-            Thread.sleep(until: Date() + TimeInterval(0.01))
+        while !input.isReadyForMoreMediaData {
+            if writer.status == .failed {
+                status = .error
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(5))
         }
         encode(frame: frame, frameNumber: currentFrame)
     }
 
+    func finishEncoding() async -> EncodingStatus {
+        guard let writer = videoWriter else { return status }
+        if writer.status == .failed {
+            print("Something went wrong when writing video. \(writer.error?.localizedDescription ?? "unknown error")")
+            status = .error
+        } else {
+            videoWriterInput?.markAsFinished()
+            await writer.finishWriting()
+            if writer.status == .failed {
+                print("Finalizing video failed. \(writer.error?.localizedDescription ?? "unknown error")")
+                status = .error
+            }
+        }
+        videoWriter = nil
+        videoWriterInput = nil
+        videoAdapter = nil
+        return status
+    }
+
     private func initializeFile() {
         do {
-            videoWriter = try AVAssetWriter(outputURL: self.filePath, fileType: .mp4)
+            let videoWriter = try AVAssetWriter(outputURL: self.filePath, fileType: .mp4)
             let settings: [String : Any] = [
                 AVVideoCodecKey: AVVideoCodecType.hevc,
                 AVVideoWidthKey: self.width,
@@ -65,17 +82,20 @@ class VideoEncoder {
             input.expectsMediaDataInRealTime = true
             input.mediaTimeScale = timeScale
             input.performsMultiPassEncodingIfSupported = false
-            videoAdapter = createVideoAdapter(input)
-            if videoWriter!.canAdd(input) {
-                videoWriter!.add(input)
+            videoAdapter = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: nil)
+            if videoWriter.canAdd(input) {
+                videoWriter.add(input)
                 videoWriterInput = input
-                videoWriter!.startWriting()
-                videoWriter!.startSession(atSourceTime: .zero)
+                videoWriter.startWriting()
+                videoWriter.startSession(atSourceTime: .zero)
+                self.videoWriter = videoWriter
             } else {
                 print("Can't create writer.")
+                status = .error
             }
         } catch let error as NSError {
             print("Creating AVAssetWriter failed. \(error), \(error.userInfo)")
+            status = .error
         }
     }
 
@@ -86,24 +106,5 @@ class VideoEncoder {
         if !success {
             print("Pixel buffer could not be appended. \(videoWriter!.error!.localizedDescription)")
         }
-    }
-
-    private func doneRecording() {
-        if videoWriter?.status == .failed {
-            let error = videoWriter!.error
-            print("Something went wrong when writing video. \(error!.localizedDescription)")
-            self.status = .error
-        } else {
-            videoWriterInput?.markAsFinished()
-            videoWriter?.finishWriting { [weak self] in
-                self?.videoWriter = nil
-                self?.videoWriterInput = nil
-                self?.videoAdapter = nil
-            }
-        }
-    }
-
-    private func createVideoAdapter(_ input: AVAssetWriterInput) -> AVAssetWriterInputPixelBufferAdaptor {
-        return AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: input, sourcePixelBufferAttributes: nil)
     }
 }

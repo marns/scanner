@@ -7,52 +7,39 @@
 //
 
 import SwiftUI
-
-struct NavigationConfigurator: UIViewControllerRepresentable {
-    var configure: (UINavigationController) -> Void = { _ in }
-
-    func makeUIViewController(context: UIViewControllerRepresentableContext<NavigationConfigurator>) -> UIViewController {
-        UIViewController()
-    }
-    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<NavigationConfigurator>) {
-        if let nc = uiViewController.navigationController {
-            self.configure(nc)
-        }
-    }
-}
+import SwiftData
 
 struct RecordSessionManager: UIViewControllerRepresentable {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    func makeUIViewController(context: Context) -> some UIViewController {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+
+    func makeUIViewController(context: Context) -> RecordSessionViewController {
         let viewController = RecordSessionViewController(nibName: "RecordSessionView", bundle: nil)
-        viewController.setDismissFunction {
-            presentationMode.wrappedValue.dismiss()
-            viewController.setDismissFunction(Optional.none)
+        viewController.modelContext = modelContext
+        viewController.setDismissFunction { [weak viewController] in
+            dismiss()
+            viewController?.setDismissFunction(Optional.none)
         }
         return viewController
     }
 
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+    func updateUIViewController(_ uiViewController: RecordSessionViewController, context: Context) {}
 }
 
 struct NewSessionView : View {
-    
+
     var body: some View {
         RecordSessionManager()
             .padding(.vertical, 0.0)
-            .navigationBarTitle("Recording")
+            .navigationTitle("Recording")
             .navigationBarTitleDisplayMode(.inline)
-            .edgesIgnoringSafeArea(.all)
-            .background(NavigationConfigurator { nc in
-                nc.navigationBar.barTintColor = UIColor(named: "BackgroundColor")
-            })
-
+            .ignoresSafeArea()
     }
 }
 
-struct NewSessionView_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    NavigationStack {
         NewSessionView()
     }
+    .modelContainer(for: Recording.self, inMemory: true)
 }

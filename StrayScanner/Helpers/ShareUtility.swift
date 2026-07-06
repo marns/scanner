@@ -7,35 +7,26 @@
 
 import Foundation
 
-/// Utility class for creating shareable archives from recording datasets
-class ShareUtility {
-    
-    /// Creates a shareable ZIP archive from a recording's dataset
-    /// - Parameter recording: The recording to create a ZIP archive for
-    /// - Returns: URL of the created ZIP file
-    static func createShareableArchive(for recording: Recording) async throws -> URL {
-        guard let sourceDirectory = recording.directoryPath() else {
-            throw NSError(domain: "ShareError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to get recording directory path"])
-        }
-        
+/// Utility for creating shareable archives from recording datasets.
+nonisolated enum ShareUtility {
+
+    /// Creates a shareable ZIP archive of a dataset directory.
+    /// - Parameter sourceDirectory: The recording's dataset directory.
+    /// - Returns: URL of the created ZIP file in the temporary directory.
+    static func createShareableArchive(from sourceDirectory: URL) async throws -> URL {
         let tempDirectory = FileManager.default.temporaryDirectory
         let archiveURL = tempDirectory.appendingPathComponent(sourceDirectory.lastPathComponent + ".zip")
-        
+
         // Remove existing archive if it exists
         try? FileManager.default.removeItem(at: archiveURL)
-        
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    try createZipArchive(sourceDirectory: sourceDirectory, destinationURL: archiveURL)
-                    continuation.resume(returning: archiveURL)
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
+
+        let work = Task.detached(priority: .userInitiated) {
+            try createZipArchive(sourceDirectory: sourceDirectory, destinationURL: archiveURL)
+            return archiveURL
         }
+        return try await work.value
     }
-    
+
     private static func createZipArchive(sourceDirectory: URL, destinationURL: URL) throws {
         let coordinator = NSFileCoordinator()
         var coordinatorError: NSError?

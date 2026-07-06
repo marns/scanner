@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct InformationView: View {
+    @Environment(\.openURL) private var openURL
     let paddingLeftRight: CGFloat = 15
     let paddingTextTop: CGFloat = 10
     var body: some View {
@@ -81,15 +82,12 @@ The recorded datasets can be exported in several ways:
             .foregroundColor(Color.blue)
             .padding(.top, paddingTextTop)
             .onTapGesture {
-                let url = URL.init(string: destination)
-                guard let destinationUrl = url else { return }
-                UIApplication.shared.open(destinationUrl)
+                guard let destinationUrl = URL(string: destination) else { return }
+                openURL(destinationUrl)
             }
     }
 }
 
-struct InformationView_Previews: PreviewProvider {
-    static var previews: some View {
-        InformationView()
-    }
+#Preview {
+    InformationView()
 }

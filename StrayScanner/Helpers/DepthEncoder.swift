@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import CoreImage
-import UIKit
+import CoreVideo
 
-class DepthEncoder {
+nonisolated final class DepthEncoder {
     enum Status {
         case allGood
         case frameEncodingError
@@ -30,26 +29,28 @@ class DepthEncoder {
 
     func encodeFrame(frame: CVPixelBuffer, frameNumber: Int) {
         let filename = String(format: "%06d", frameNumber)
-        let encoder = self.convert(frame: frame)
-        let data = encoder.fileContents()
         let framePath = self.baseDirectory.absoluteURL.appendingPathComponent(filename, isDirectory: false).appendingPathExtension("png")
+        guard let data = convert(frame: frame) else {
+            print("Could not encode depth image \(frameNumber).")
+            status = .frameEncodingError
+            return
+        }
         do {
-            try data?.write(to: framePath)
+            try data.write(to: framePath)
         } catch let error {
             print("Could not save depth image \(frameNumber). \(error.localizedDescription)")
+            status = .frameEncodingError
         }
     }
-    
-    private func convert(frame: CVPixelBuffer) -> PngEncoder {
+
+    private func convert(frame: CVPixelBuffer) -> Data? {
         assert(CVPixelBufferGetPixelFormatType(frame) == kCVPixelFormatType_DepthFloat32)
         let height = CVPixelBufferGetHeight(frame)
         let width = CVPixelBufferGetWidth(frame)
         CVPixelBufferLockBaseAddress(frame, CVPixelBufferLockFlags.readOnly)
-        let inBase = CVPixelBufferGetBaseAddress(frame)
-        let inPixelData = inBase!.assumingMemoryBound(to: Float32.self)
-        
-        let out = PngEncoder.init(depth: inPixelData, width: Int32(width), height: Int32(height))!
-        CVPixelBufferUnlockBaseAddress(frame, CVPixelBufferLockFlags(rawValue: 0))
-        return out
+        defer { CVPixelBufferUnlockBaseAddress(frame, CVPixelBufferLockFlags.readOnly) }
+        guard let inBase = CVPixelBufferGetBaseAddress(frame) else { return nil }
+        let inPixelData = inBase.assumingMemoryBound(to: Float32.self)
+        return DepthPngEncoder.encode(depth: inPixelData, width: width, height: height)
     }
 }

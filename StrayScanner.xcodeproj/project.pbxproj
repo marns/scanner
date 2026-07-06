@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		24B9204E08E8610D3CB4F2CB /* Pods_StrayScanner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBC054EDDA47FB8A717AA671 /* Pods_StrayScanner.framework */; };
 		38045D582561A7370004F23C /* SessionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D572561A7370004F23C /* SessionRow.swift */; };
+		AA0000020000000000000001 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
+		AA0000020000000000000002 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
+		AA0000020000000000000003 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
+		AA0000020000000000000004 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
+		AA0000020000000000000005 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
+		AA0000020000000000000006 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
+		AA0000020000000000000007 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
+		AA0000020000000000000008 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
 		38045D5A2561AC000004F23C /* SessionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D592561AC000004F23C /* SessionList.swift */; };
-		3807420B27BBCE83003194C1 /* PngEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3807420A27BBCE83003194C1 /* PngEncoder.mm */; };
-		3807420F27BBCF2D003194C1 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3807420E27BBCF2D003194C1 /* lodepng.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
-		3807421027BBD07D003194C1 /* PngEncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3807420A27BBCE83003194C1 /* PngEncoder.mm */; };
-		3807421127BBD77B003194C1 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3807420E27BBCF2D003194C1 /* lodepng.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		380B9189259B39E300580D30 /* RecordSessionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 380B9188259B39E300580D30 /* RecordSessionView.xib */; };
-		385999BD25616F2B00F3F681 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385999BC25616F2B00F3F681 /* AppDelegate.swift */; };
-		385999BF25616F2B00F3F681 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385999BE25616F2B00F3F681 /* SceneDelegate.swift */; };
-		385999C225616F2B00F3F681 /* Stray_Scanner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 385999C025616F2B00F3F681 /* Stray_Scanner.xcdatamodeld */; };
 		385999C625616F3000F3F681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 385999C525616F3000F3F681 /* Assets.xcassets */; };
 		385999C925616F3000F3F681 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 385999C825616F3000F3F681 /* Preview Assets.xcassets */; };
 		385999CC25616F3000F3F681 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 385999CA25616F3000F3F681 /* LaunchScreen.storyboard */; };
@@ -26,15 +26,9 @@
 		3863FE6225FCBB0E00C1DA4F /* RecordSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FB730E2572A9FA007D9CB0 /* RecordSessionViewController.swift */; };
 		3863FE6325FCBB0E00C1DA4F /* SessionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D572561A7370004F23C /* SessionRow.swift */; };
 		3863FE6425FCBB0E00C1DA4F /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 38FB73152572AF63007D9CB0 /* Shaders.metal */; };
-		3863FE6525FCBB0E00C1DA4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385999BC25616F2B00F3F681 /* AppDelegate.swift */; };
 		3863FE6625FCBB0E00C1DA4F /* SessionDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B22259D1C80006B3FDA /* SessionDetail.swift */; };
-		3863FE6825FCBB0E00C1DA4F /* Stray_Scanner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 385999C025616F2B00F3F681 /* Stray_Scanner.xcdatamodeld */; };
 		3863FE6925FCBB0E00C1DA4F /* SessionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D592561AC000004F23C /* SessionList.swift */; };
 		3863FE6A25FCBB0E00C1DA4F /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E277725991163007D023B /* RecordButton.swift */; };
-		3863FE6C25FCBB0E00C1DA4F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385999BE25616F2B00F3F681 /* SceneDelegate.swift */; };
-		3863FE6E25FCBB0E00C1DA4F /* Recording+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B11259BE1DA006B3FDA /* Recording+CoreDataProperties.swift */; };
-		3863FE6F25FCBB0E00C1DA4F /* Recording+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B10259BE1DA006B3FDA /* Recording+CoreDataClass.swift */; };
-		3863FE7425FCBB0E00C1DA4F /* Pods_StrayScanner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBC054EDDA47FB8A717AA671 /* Pods_StrayScanner.framework */; };
 		3863FE7625FCBB0E00C1DA4F /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3872B88825962BBA00A3370C /* Colors.xcassets */; };
 		3863FE7725FCBB0E00C1DA4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 385999CA25616F3000F3F681 /* LaunchScreen.storyboard */; };
 		3863FE7825FCBB0E00C1DA4F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 385999C825616F3000F3F681 /* Preview Assets.xcassets */; };
@@ -62,14 +56,14 @@
 		3872B88925962BBA00A3370C /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3872B88825962BBA00A3370C /* Colors.xcassets */; };
 		387B578125EA5BB900132903 /* StrayScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B578025EA5BB900132903 /* StrayScannerTests.swift */; };
 		387B57C225EC065600132903 /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B57C125EC065600132903 /* InformationView.swift */; };
-		38C17B12259BE1DA006B3FDA /* Recording+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B10259BE1DA006B3FDA /* Recording+CoreDataClass.swift */; };
-		38C17B13259BE1DA006B3FDA /* Recording+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B11259BE1DA006B3FDA /* Recording+CoreDataProperties.swift */; };
 		38C17B23259D1C80006B3FDA /* SessionDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C17B22259D1C80006B3FDA /* SessionDetail.swift */; };
 		38E969CB2572608E00054CC4 /* NewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E969CA2572608E00054CC4 /* NewSession.swift */; };
 		38FB730F2572A9FA007D9CB0 /* RecordSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FB730E2572A9FA007D9CB0 /* RecordSessionViewController.swift */; };
 		38FB73162572AF63007D9CB0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 38FB73152572AF63007D9CB0 /* Shaders.metal */; };
 		70849EC02E0E46B1007E1315 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EBF2E0E46B1007E1315 /* SettingsView.swift */; };
+		70849EC12E0E46B1007E1315 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EBF2E0E46B1007E1315 /* SettingsView.swift */; };
 		70849EC42E0E4CE2007E1315 /* SettingsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */; };
+		70849EC52E0E4CE2007E1315 /* SettingsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */; };
 		709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 		70CF35492E17803700276207 /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 /* End PBXBuildFile section */
@@ -85,17 +79,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		09A6D95A8151C51C3ECF4131 /* Pods-StrayScanner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrayScanner.release.xcconfig"; path = "Target Support Files/Pods-StrayScanner/Pods-StrayScanner.release.xcconfig"; sourceTree = "<group>"; };
 		38045D572561A7370004F23C /* SessionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRow.swift; sourceTree = "<group>"; };
+		AA0000010000000000000001 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		AA0000010000000000000002 /* StrayScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrayScannerApp.swift; sourceTree = "<group>"; };
+		AA0000010000000000000003 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		AA0000010000000000000004 /* DepthPngEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthPngEncoder.swift; sourceTree = "<group>"; };
 		38045D592561AC000004F23C /* SessionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionList.swift; sourceTree = "<group>"; };
-		3807420A27BBCE83003194C1 /* PngEncoder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PngEncoder.mm; sourceTree = "<group>"; };
-		3807420C27BBCEB4003194C1 /* PngEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PngEncoder.h; sourceTree = "<group>"; };
-		3807420D27BBCF01003194C1 /* lodepng.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lodepng.h; sourceTree = "<group>"; };
-		3807420E27BBCF2D003194C1 /* lodepng.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = lodepng.cpp; sourceTree = "<group>"; };
 		380B9188259B39E300580D30 /* RecordSessionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecordSessionView.xib; sourceTree = "<group>"; };
 		385999B925616F2B00F3F681 /* StrayScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StrayScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		385999BC25616F2B00F3F681 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		385999BE25616F2B00F3F681 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		385999C125616F2B00F3F681 /* Stray_Scanner.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Stray_Scanner.xcdatamodel; sourceTree = "<group>"; };
 		385999C525616F3000F3F681 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		385999C825616F3000F3F681 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -118,8 +109,6 @@
 		387B578225EA5BB900132903 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		387B57C125EC065600132903 /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		38ABA53C26D63239002169BD /* Info-debug.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-debug.plist"; sourceTree = "<group>"; };
-		38C17B10259BE1DA006B3FDA /* Recording+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recording+CoreDataClass.swift"; sourceTree = "<group>"; };
-		38C17B11259BE1DA006B3FDA /* Recording+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recording+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		38C17B22259D1C80006B3FDA /* SessionDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDetail.swift; sourceTree = "<group>"; };
 		38E969CA2572608E00054CC4 /* NewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSession.swift; sourceTree = "<group>"; };
 		38FB730E2572A9FA007D9CB0 /* RecordSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordSessionViewController.swift; sourceTree = "<group>"; };
@@ -129,8 +118,6 @@
 		70849EBF2E0E46B1007E1315 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConstants.swift; sourceTree = "<group>"; };
 		709259182E0B79AB00A7B62E /* ShareUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareUtility.swift; sourceTree = "<group>"; };
-		AC52749A3B5AED09C9753120 /* Pods-StrayScanner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StrayScanner.debug.xcconfig"; path = "Target Support Files/Pods-StrayScanner/Pods-StrayScanner.debug.xcconfig"; sourceTree = "<group>"; };
-		DBC054EDDA47FB8A717AA671 /* Pods_StrayScanner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StrayScanner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +125,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24B9204E08E8610D3CB4F2CB /* Pods_StrayScanner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,7 +132,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3863FE7425FCBB0E00C1DA4F /* Pods_StrayScanner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,20 +145,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0905A155A958CE7B22575DF5 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				AC52749A3B5AED09C9753120 /* Pods-StrayScanner.debug.xcconfig */,
-				09A6D95A8151C51C3ECF4131 /* Pods-StrayScanner.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		38045D502561A4C80004F23C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				38C17B10259BE1DA006B3FDA /* Recording+CoreDataClass.swift */,
-				38C17B11259BE1DA006B3FDA /* Recording+CoreDataProperties.swift */,
+				AA0000010000000000000001 /* Recording.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -207,8 +182,6 @@
 				385999BB25616F2B00F3F681 /* StrayScanner */,
 				387B577F25EA5BB900132903 /* StrayScannerTests */,
 				385999BA25616F2B00F3F681 /* Products */,
-				0905A155A958CE7B22575DF5 /* Pods */,
-				41382767AE5D9ABDCEFAD16D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -226,7 +199,6 @@
 			isa = PBXGroup;
 			children = (
 				38694C6B26D2C66F00546EA1 /* Helpers */,
-				387B576825EA55AC00132903 /* CCode */,
 				70849EC32E0E4CE2007E1315 /* Constants */,
 				38C17AE4259BCD16006B3FDA /* UI */,
 				38FB73142572AF50007D9CB0 /* Shaders */,
@@ -234,9 +206,9 @@
 				38045D562561A6D20004F23C /* Views */,
 				38045D532561A55A0004F23C /* Resources */,
 				38045D502561A4C80004F23C /* Models */,
-				385999BC25616F2B00F3F681 /* AppDelegate.swift */,
-				385999BE25616F2B00F3F681 /* SceneDelegate.swift */,
 				385999C525616F3000F3F681 /* Assets.xcassets */,
+				AA0000010000000000000002 /* StrayScannerApp.swift */,
+				AA0000010000000000000003 /* PersistenceController.swift */,
 				385999CD25616F3000F3F681 /* Info.plist */,
 				38ABA53C26D63239002169BD /* Info-debug.plist */,
 				385999C025616F2B00F3F681 /* Stray_Scanner.xcdatamodeld */,
@@ -257,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				709259182E0B79AB00A7B62E /* ShareUtility.swift */,
+				AA0000010000000000000004 /* DepthPngEncoder.swift */,
 				38694C6C26D2C66F00546EA1 /* DatasetEncoder.swift */,
 				38694C6D26D2C66F00546EA1 /* ConfidenceEncoder.swift */,
 				38694C6E26D2C66F00546EA1 /* VideoEncoder.swift */,
@@ -268,17 +241,6 @@
 				38694C7326D2C66F00546EA1 /* AppDaemon.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		387B576825EA55AC00132903 /* CCode */ = {
-			isa = PBXGroup;
-			children = (
-				3807420A27BBCE83003194C1 /* PngEncoder.mm */,
-				3807420C27BBCEB4003194C1 /* PngEncoder.h */,
-				3807420D27BBCF01003194C1 /* lodepng.h */,
-				3807420E27BBCF2D003194C1 /* lodepng.cpp */,
-			);
-			path = CCode;
 			sourceTree = "<group>";
 		};
 		387B577F25EA5BB900132903 /* StrayScannerTests */ = {
@@ -316,14 +278,6 @@
 			path = Shaders;
 			sourceTree = "<group>";
 		};
-		41382767AE5D9ABDCEFAD16D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				DBC054EDDA47FB8A717AA671 /* Pods_StrayScanner.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		70849EC32E0E4CE2007E1315 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,7 +293,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 385999DB25616F3100F3F681 /* Build configuration list for PBXNativeTarget "StrayScanner" */;
 			buildPhases = (
-				4DB8A597843EA39DA438F658 /* [CP] Check Pods Manifest.lock */,
 				385999B525616F2A00F3F681 /* Sources */,
 				385999B625616F2A00F3F681 /* Frameworks */,
 				385999B725616F2A00F3F681 /* Resources */,
@@ -357,7 +310,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3863FE7B25FCBB0E00C1DA4F /* Build configuration list for PBXNativeTarget "StrayScanner debug" */;
 			buildPhases = (
-				3863FE5B25FCBB0E00C1DA4F /* [CP] Check Pods Manifest.lock */,
 				3863FE5C25FCBB0E00C1DA4F /* Sources */,
 				3863FE7325FCBB0E00C1DA4F /* Frameworks */,
 				3863FE7525FCBB0E00C1DA4F /* Resources */,
@@ -463,53 +415,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3863FE5B25FCBB0E00C1DA4F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-StrayScanner-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4DB8A597843EA39DA438F658 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-StrayScanner-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		385999B525616F2A00F3F681 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -517,31 +422,28 @@
 			files = (
 				387B57C225EC065600132903 /* InformationView.swift in Sources */,
 				38E969CB2572608E00054CC4 /* NewSession.swift in Sources */,
-				3807420F27BBCF2D003194C1 /* lodepng.cpp in Sources */,
 				38FB730F2572A9FA007D9CB0 /* RecordSessionViewController.swift in Sources */,
 				38694C7E26D2C66F00546EA1 /* OdometryEncoder.swift in Sources */,
 				38694C7826D2C66F00546EA1 /* VideoEncoder.swift in Sources */,
 				38045D582561A7370004F23C /* SessionRow.swift in Sources */,
+				AA0000020000000000000001 /* Recording.swift in Sources */,
+				AA0000020000000000000002 /* StrayScannerApp.swift in Sources */,
+				AA0000020000000000000003 /* PersistenceController.swift in Sources */,
+				AA0000020000000000000007 /* DepthPngEncoder.swift in Sources */,
 				38694C7426D2C66F00546EA1 /* DatasetEncoder.swift in Sources */,
-				3807420B27BBCE83003194C1 /* PngEncoder.mm in Sources */,
 				38694C7C26D2C66F00546EA1 /* CameraRenderer.swift in Sources */,
 				38694C7A26D2C66F00546EA1 /* IMUEncoder.swift in Sources */,
 				38FB73162572AF63007D9CB0 /* Shaders.metal in Sources */,
-				385999BD25616F2B00F3F681 /* AppDelegate.swift in Sources */,
 				38C17B23259D1C80006B3FDA /* SessionDetail.swift in Sources */,
-				385999C225616F2B00F3F681 /* Stray_Scanner.xcdatamodeld in Sources */,
 				70849EC12E0E46B1007E1315 /* SettingsView.swift in Sources */,
 				38045D5A2561AC000004F23C /* SessionList.swift in Sources */,
 				38694C8226D2C66F00546EA1 /* AppDaemon.swift in Sources */,
 				38694C7626D2C66F00546EA1 /* ConfidenceEncoder.swift in Sources */,
 				386E277825991163007D023B /* RecordButton.swift in Sources */,
-				385999BF25616F2B00F3F681 /* SceneDelegate.swift in Sources */,
 				709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */,
 				70849EC42E0E4CE2007E1315 /* SettingsConstants.swift in Sources */,
 				38694C8026D2C66F00546EA1 /* DepthEncoder.swift in Sources */,
 				70D1234B2E1800000027BEEF /* DistortionEncoder.swift in Sources */,
-				38C17B13259BE1DA006B3FDA /* Recording+CoreDataProperties.swift in Sources */,
-				38C17B12259BE1DA006B3FDA /* Recording+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,31 +453,28 @@
 			files = (
 				3863FE5E25FCBB0E00C1DA4F /* InformationView.swift in Sources */,
 				3863FE5F25FCBB0E00C1DA4F /* NewSession.swift in Sources */,
-				3807421127BBD77B003194C1 /* lodepng.cpp in Sources */,
 				3863FE6225FCBB0E00C1DA4F /* RecordSessionViewController.swift in Sources */,
 				38694C7F26D2C66F00546EA1 /* OdometryEncoder.swift in Sources */,
 				38694C7926D2C66F00546EA1 /* VideoEncoder.swift in Sources */,
 				3863FE6325FCBB0E00C1DA4F /* SessionRow.swift in Sources */,
+				AA0000020000000000000004 /* Recording.swift in Sources */,
+				AA0000020000000000000005 /* StrayScannerApp.swift in Sources */,
+				AA0000020000000000000006 /* PersistenceController.swift in Sources */,
+				AA0000020000000000000008 /* DepthPngEncoder.swift in Sources */,
 				38694C7526D2C66F00546EA1 /* DatasetEncoder.swift in Sources */,
 				38694C7D26D2C66F00546EA1 /* CameraRenderer.swift in Sources */,
 				70849EC02E0E46B1007E1315 /* SettingsView.swift in Sources */,
 				38694C7B26D2C66F00546EA1 /* IMUEncoder.swift in Sources */,
 				3863FE6425FCBB0E00C1DA4F /* Shaders.metal in Sources */,
-				3863FE6525FCBB0E00C1DA4F /* AppDelegate.swift in Sources */,
 				3863FE6625FCBB0E00C1DA4F /* SessionDetail.swift in Sources */,
-				3863FE6825FCBB0E00C1DA4F /* Stray_Scanner.xcdatamodeld in Sources */,
 				3863FE6925FCBB0E00C1DA4F /* SessionList.swift in Sources */,
 				38694C8326D2C66F00546EA1 /* AppDaemon.swift in Sources */,
 				38694C7726D2C66F00546EA1 /* ConfidenceEncoder.swift in Sources */,
 				3863FE6A25FCBB0E00C1DA4F /* RecordButton.swift in Sources */,
 				70849EC52E0E4CE2007E1315 /* SettingsConstants.swift in Sources */,
-				3807421027BBD07D003194C1 /* PngEncoder.mm in Sources */,
-				3863FE6C25FCBB0E00C1DA4F /* SceneDelegate.swift in Sources */,
 				70CF35492E17803700276207 /* ShareUtility.swift in Sources */,
 				38694C8126D2C66F00546EA1 /* DepthEncoder.swift in Sources */,
 				70D1234C2E1800000027BEEF /* DistortionEncoder.swift in Sources */,
-				3863FE6E25FCBB0E00C1DA4F /* Recording+CoreDataProperties.swift in Sources */,
-				3863FE6F25FCBB0E00C1DA4F /* Recording+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,7 +514,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -660,7 +559,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -677,7 +576,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -716,7 +615,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -729,107 +628,111 @@
 		};
 		385999DC25616F3100F3F681 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC52749A3B5AED09C9753120 /* Pods-StrayScanner.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = StrayScanner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = "6.0";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		385999DD25616F3100F3F681 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 09A6D95A8151C51C3ECF4131 /* Pods-StrayScanner.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = StrayScanner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = "6.0";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		3863FE7C25FCBB0E00C1DA4F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AC52749A3B5AED09C9753120 /* Pods-StrayScanner.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StrayScanner/Info-debug.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScannerDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = "6.0";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		3863FE7D25FCBB0E00C1DA4F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 09A6D95A8151C51C3ECF4131 /* Pods-StrayScanner.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"StrayScanner/Preview Content\"";
-				DEVELOPMENT_TEAM = 994C2WLGU3;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "StrayScanner/Info-debug.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScannerDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = "6.0";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -840,9 +743,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2QREBG9C6Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StrayScannerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -852,7 +755,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StrayScanner.app/StrayScanner";
 			};
 			name = Debug;
@@ -864,9 +767,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2QREBG9C6Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StrayScannerTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -875,7 +778,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScannerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StrayScanner.app/StrayScanner";
 			};
 			name = Release;

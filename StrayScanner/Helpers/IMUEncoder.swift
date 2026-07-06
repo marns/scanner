@@ -1,5 +1,5 @@
 //
-//  OdometryEncoder.swift
+//  IMUEncoder.swift
 //  StrayScanner
 //
 //  Created by Kenneth Blomqvist on 1/31/21.
@@ -7,22 +7,21 @@
 //
 
 import Foundation
-import ARKit
+import simd
 
-class IMUEncoder {
+nonisolated final class IMUEncoder {
     let path: URL
     let fileHandle: FileHandle
 
     init(url: URL) {
         self.path = url
-        FileManager.default.createFile(atPath: self.path.absoluteString,  contents:Data("".utf8), attributes: nil)
         do {
             try "".write(to: self.path, atomically: true, encoding: .utf8)
             self.fileHandle = try FileHandle(forWritingTo: self.path)
             let heading: String = "timestamp, a_x, a_y, a_z, alpha_x, alpha_y, alpha_z\n"
             self.fileHandle.write(heading.data(using: .utf8)!)
         } catch let error {
-            print("Can't create file \(self.path.absoluteString). \(error.localizedDescription)")
+            print("Can't create file \(self.path.path). \(error.localizedDescription)")
             preconditionFailure("Can't open imu file for writing.")
         }
     }
@@ -36,7 +35,7 @@ class IMUEncoder {
         do {
             try self.fileHandle.close()
         } catch let error {
-            print("Closing imu \(self.path.absoluteString) file handle failed. \(error.localizedDescription)")
+            print("Closing imu \(self.path.path) file handle failed. \(error.localizedDescription)")
         }
     }
 }
