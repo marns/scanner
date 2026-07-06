@@ -9,7 +9,7 @@
 import Foundation
 import CoreImage
 
-class ConfidenceEncoder {
+nonisolated final class ConfidenceEncoder {
     enum Status {
         case allGood
         case encodingError

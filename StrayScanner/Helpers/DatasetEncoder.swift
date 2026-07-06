@@ -10,39 +10,83 @@ import Foundation
 import ARKit
 import CryptoKit
 import CoreMotion
+import Synchronization
 import UIKit
 
+/// Bounded in-flight frame counter. Replaces the old DispatchSemaphore-based
+/// backpressure: when `limit` frames are queued but not yet written, new frames
+/// are dropped (never buffered) so ARKit's pixel buffer pool is not starved.
+nonisolated final class InFlightFrames: Sendable {
+    private let count: Mutex<Int>
+    private let limit: Int
+
+    init(limit: Int) {
+        self.count = Mutex(0)
+        self.limit = limit
+    }
+
+    func tryAcquire() -> Bool {
+        count.withLock { value in
+            if value < limit {
+                value += 1
+                return true
+            }
+            return false
+        }
+    }
+
+    func release() {
+        count.withLock { $0 -= 1 }
+    }
+}
+
+@MainActor
 class DatasetEncoder {
     enum Status {
         case allGood
         case videoEncodingError
         case directoryCreationError
     }
-    private let rgbEncoder: VideoEncoder
-    private let depthEncoder: DepthEncoder
-    private let confidenceEncoder: ConfidenceEncoder
+
+    /// Everything the writer needs from an ARFrame, extracted at the delegate
+    /// boundary so the ARFrame itself never outlives the session callback.
+    ///
+    /// @unchecked Sendable: CVPixelBuffer is not Sendable in the SDK, but the
+    /// capture-produced buffers are never written after capture, the renderer
+    /// reads them synchronously before this struct is enqueued, and exactly one
+    /// consumer (FrameWriter) processes each instance.
+    nonisolated struct FrameData: @unchecked Sendable {
+        let image: CVPixelBuffer
+        let depth: CVPixelBuffer?
+        let confidence: CVPixelBuffer?
+        let timestamp: TimeInterval
+        let transform: simd_float4x4
+        let intrinsics: simd_float3x3
+        let distortionCenter: CGPoint?
+        let distortionTable: Data?
+    }
+
+    nonisolated enum Item: Sendable {
+        case frame(FrameData, number: Int)
+        case accelerometer(timestamp: Double, value: simd_double3)
+        case gyroscope(timestamp: Double, value: simd_double3)
+    }
+
+    private nonisolated let continuation: AsyncStream<Item>.Continuation
+    private nonisolated let inFlight = InFlightFrames(limit: 3)
+    private let writer: FrameWriter
+    private let writerTask: Task<Void, Never>
     private let datasetDirectory: URL
-    private let odometryEncoder: OdometryEncoder
-    private let imuEncoder: IMUEncoder
-    private let distortionEncoder: DistortionEncoder
-    private var lastFrame: ARFrame?
-    private var dispatchGroup = DispatchGroup()
     private var currentFrame: Int = -1
     private var savedFrames: Int = 0
+    private var latestIntrinsics: simd_float3x3?
+    private var directoryError = false
     private let frameInterval: Int // Only save every frameInterval-th frame.
-    private let encodingSemaphore = DispatchSemaphore(value: 3) // Limit queued frames to avoid ARFrame retention
     public let id: UUID
     public let rgbFilePath: URL // Relative to app document directory.
     public let depthFilePath: URL // Relative to app document directory.
     public let cameraMatrixPath: URL
-    public let odometryPath: URL
-    public let imuPath: URL
-    public var status = Status.allGood
-    private let queue: DispatchQueue
-    
-    private var latestAccelerometerData: (timestamp: Double, data: simd_double3)?
-    private var latestGyroscopeData: (timestamp: Double, data: simd_double3)?
-    
+
     // Adaptive mode properties
     private let adaptiveModeEnabled: Bool
     private let positionThreshold: Float
@@ -50,199 +94,144 @@ class DatasetEncoder {
     private var lastSavedTransform: simd_float4x4?
     private let hapticGenerator = UIImpactFeedbackGenerator(style: .light)
 
-
     init(arConfiguration: ARWorldTrackingConfiguration, fpsDivider: Int = 1) {
         self.frameInterval = fpsDivider
-        self.queue = DispatchQueue(label: "encoderQueue")
-        
+
         // Check if we're in adaptive mode (indicated by the FPS button selection)
         let currentFpsSetting = UserDefaults.standard.integer(forKey: FpsUserDefaultsKey)
         self.adaptiveModeEnabled = (currentFpsSetting == AdaptiveModeIndex)
-        
+
         // Load adaptive mode thresholds with defaults
         let posThreshold = UserDefaults.standard.double(forKey: AdaptiveThresholdPositionKey)
         let angleThresholdDegrees = UserDefaults.standard.double(forKey: AdaptiveThresholdAngleKey)
         self.positionThreshold = Float(posThreshold > 0 ? posThreshold : DefaultAdaptiveThresholdPosition)
-        
+
         // Convert angle threshold to cosine for efficient comparison
         let angleThresholdRadians = Float(angleThresholdDegrees > 0 ? angleThresholdDegrees : DefaultAdaptiveThresholdAngle) * Float.pi / 180.0
-        self.angleThresholdCos = cos(angleThresholdRadians) // Direct angle for forward vector comparison
-        
-        // Prepare haptic generator
+        self.angleThresholdCos = cos(angleThresholdRadians)
+
         if self.adaptiveModeEnabled {
             hapticGenerator.prepare()
-            let angleDegreesForDebug = acos(self.angleThresholdCos) * 180.0 / Float.pi
-            print("Adaptive mode enabled: pos threshold=\(self.positionThreshold*100)cm, angle threshold=\(angleDegreesForDebug)° (forward vector)")
-        } else {
-            print("Adaptive mode disabled")
         }
-        
+
         let width = arConfiguration.videoFormat.imageResolution.width
         let height = arConfiguration.videoFormat.imageResolution.height
         var theId: UUID = UUID()
-        datasetDirectory = DatasetEncoder.createDirectory(id: &theId)
+        var directoryError = false
+        let datasetDirectory = DatasetEncoder.createDirectory(id: &theId, error: &directoryError)
+        self.datasetDirectory = datasetDirectory
+        self.directoryError = directoryError
         self.id = theId
         self.rgbFilePath = datasetDirectory.appendingPathComponent("rgb.mp4")
-        self.rgbEncoder = VideoEncoder(file: self.rgbFilePath, width: width, height: height)
         self.depthFilePath = datasetDirectory.appendingPathComponent("depth", isDirectory: true)
-        self.depthEncoder = DepthEncoder(outDirectory: self.depthFilePath)
-        let confidenceFilePath = datasetDirectory.appendingPathComponent("confidence", isDirectory: true)
-        self.confidenceEncoder = ConfidenceEncoder(outDirectory: confidenceFilePath)
         self.cameraMatrixPath = datasetDirectory.appendingPathComponent("camera_matrix.csv", isDirectory: false)
-        self.odometryPath = datasetDirectory.appendingPathComponent("odometry.csv", isDirectory: false)
-        self.odometryEncoder = OdometryEncoder(url: self.odometryPath)
-        self.imuPath = datasetDirectory.appendingPathComponent("imu.csv", isDirectory: false)
-        self.imuEncoder = IMUEncoder(url: self.imuPath)
-        self.distortionEncoder = DistortionEncoder(datasetDirectory: datasetDirectory)
+
+        let (stream, continuation) = AsyncStream.makeStream(of: Item.self)
+        self.continuation = continuation
+        let writer = FrameWriter(
+            datasetDirectory: datasetDirectory,
+            rgbFilePath: rgbFilePath,
+            depthFilePath: depthFilePath,
+            width: width,
+            height: height,
+            inFlight: inFlight)
+        self.writer = writer
+        self.writerTask = Task {
+            await writer.run(stream)
+        }
     }
 
     func add(frame: ARFrame) {
-        let totalFrames: Int = currentFrame
         currentFrame = currentFrame + 1
-        
+
         // Check if we should skip this frame based on frame interval
         if (currentFrame % frameInterval != 0) {
             return
         }
 
-        // If adaptive mode is enabled, check if pose has changed significantly
-        if adaptiveModeEnabled {
-            let currentTransform = frame.camera.transform
-            
-            if let lastTransform = lastSavedTransform {
-                // Calculate position change
-                let lastPos = simd_float3(lastTransform.columns.3.x, lastTransform.columns.3.y, lastTransform.columns.3.z)
-                let currentPos = simd_float3(currentTransform.columns.3.x, currentTransform.columns.3.y, currentTransform.columns.3.z)
-                let positionDelta = simd_distance(lastPos, currentPos)
-                
-                // Calculate forward vector dot product for rotation comparison
-                // Forward is -Z in ARKit's coordinate system
-                let lastForward = -simd_float3(lastTransform.columns.2.x, lastTransform.columns.2.y, lastTransform.columns.2.z)
-                let currentForward = -simd_float3(currentTransform.columns.2.x, currentTransform.columns.2.y, currentTransform.columns.2.z)
-                let dotProduct = simd_dot(lastForward, currentForward)
-                
-                // Debug logging (remove in production)
-//                if adaptiveModeEnabled {
-//                    let angleDelta = acos(min(dotProduct, 1.0)) * 180.0 / Float.pi
-//                    let angleThresholdDegrees = acos(angleThresholdCos) * 180.0 / Float.pi
-//                    print("Adaptive mode: pos=\(positionDelta*100)cm, angle=\(angleDelta)°, thresholds: pos=\(positionThreshold*100)cm, angle=\(angleThresholdDegrees)°")
-//                }
-                
-                // Skip frame if changes are below thresholds
-                // Note: dotProduct > angleThresholdCos means angle < threshold (cosine decreases as angle increases)
-                if positionDelta < positionThreshold && dotProduct > angleThresholdCos {
-                    return
-                }
-            }
-            
-            // Update last saved transform
-            lastSavedTransform = currentTransform
-            
-            // Trigger haptic feedback for adaptive mode capture
-            DispatchQueue.main.async {
-                self.hapticGenerator.impactOccurred()
+        // If adaptive mode is enabled, decide whether the pose has changed
+        // enough to warrant saving this frame.
+        let currentTransform = frame.camera.transform
+        if adaptiveModeEnabled, let lastTransform = lastSavedTransform {
+            // Calculate position change
+            let lastPos = simd_float3(lastTransform.columns.3.x, lastTransform.columns.3.y, lastTransform.columns.3.z)
+            let currentPos = simd_float3(currentTransform.columns.3.x, currentTransform.columns.3.y, currentTransform.columns.3.z)
+            let positionDelta = simd_distance(lastPos, currentPos)
+
+            // Calculate forward vector dot product for rotation comparison
+            // Forward is -Z in ARKit's coordinate system
+            let lastForward = -simd_float3(lastTransform.columns.2.x, lastTransform.columns.2.y, lastTransform.columns.2.z)
+            let currentForward = -simd_float3(currentTransform.columns.2.x, currentTransform.columns.2.y, currentTransform.columns.2.z)
+            let dotProduct = simd_dot(lastForward, currentForward)
+
+            // Skip frame if changes are below thresholds
+            // Note: dotProduct > angleThresholdCos means angle < threshold (cosine decreases as angle increases)
+            if positionDelta < positionThreshold && dotProduct > angleThresholdCos {
+                return
             }
         }
 
-        // Drop frame if encoding is backed up to avoid accumulating ARFrame references.
-        guard encodingSemaphore.wait(timeout: .now()) == .success else {
+        // Drop the frame if encoding is backed up, so ARFrame pixel buffers
+        // are never queued without bound. Do this before committing any
+        // adaptive-mode state so a dropped frame does not advance the pose
+        // baseline or fire a "captured" haptic for a frame that is not saved.
+        guard inFlight.tryAcquire() else {
             return
         }
+
+        if adaptiveModeEnabled {
+            lastSavedTransform = currentTransform
+            hapticGenerator.impactOccurred()
+        }
+
         let frameNumber: Int = savedFrames
         savedFrames = savedFrames + 1
 
-        dispatchGroup.enter()
-        queue.async { [weak self] in
-            defer {
-                // Always balance the semaphore and enter/leave, even if self is nil.
-                self?.encodingSemaphore.signal()
-                self?.dispatchGroup.leave()
-            }
-
-            guard let self = self else { return }
-
-            if let sceneDepth = frame.sceneDepth {
-                self.depthEncoder.encodeFrame(frame: sceneDepth.depthMap, frameNumber: frameNumber)
-                if let confidence = sceneDepth.confidenceMap {
-                    self.confidenceEncoder.encodeFrame(frame: confidence, frameNumber: frameNumber)
-                } else {
-                    print("warning: confidence map missing.")
-                }
-            } else {
-                print("warning: scene depth missing.")
-            }
-
-            self.rgbEncoder.add(frame: VideoEncoderInput(buffer: frame.capturedImage, time: frame.timestamp), currentFrame: frameNumber)
-            self.odometryEncoder.add(frame: frame, currentFrame: frameNumber)
-            self.distortionEncoder.add(frame: frame, currentFrame: frameNumber)
-            self.lastFrame = frame
+        latestIntrinsics = frame.camera.intrinsics
+        let calibration = frame.capturedDepthData?.cameraCalibrationData
+        let sceneDepth = frame.sceneDepth
+        if sceneDepth == nil {
+            print("warning: scene depth missing.")
+        } else if sceneDepth?.confidenceMap == nil {
+            print("warning: confidence map missing.")
         }
+        let data = FrameData(
+            image: frame.capturedImage,
+            depth: sceneDepth?.depthMap,
+            confidence: sceneDepth?.confidenceMap,
+            timestamp: frame.timestamp,
+            transform: frame.camera.transform,
+            intrinsics: frame.camera.intrinsics,
+            distortionCenter: calibration?.lensDistortionCenter,
+            distortionTable: calibration?.lensDistortionLookupTable)
+        continuation.yield(.frame(data, number: frameNumber))
     }
-    
-   func addRawAccelerometer(data: CMAccelerometerData) {
+
+    nonisolated func addRawAccelerometer(data: CMAccelerometerData) {
         let acceleration = simd_double3(data.acceleration.x, data.acceleration.y, data.acceleration.z)
-        latestAccelerometerData = (timestamp: data.timestamp, data: acceleration)
-        tryWritingIMUData()
+        continuation.yield(.accelerometer(timestamp: data.timestamp, value: acceleration))
     }
 
-    func addRawGyroscope(data: CMGyroData) {
+    nonisolated func addRawGyroscope(data: CMGyroData) {
         let rotationRate = simd_double3(data.rotationRate.x, data.rotationRate.y, data.rotationRate.z)
-        latestGyroscopeData = (timestamp: data.timestamp, data: rotationRate)
-        tryWritingIMUData()
+        continuation.yield(.gyroscope(timestamp: data.timestamp, value: rotationRate))
     }
 
-    private func tryWritingIMUData() {
-        guard
-            let accelerometer = latestAccelerometerData,
-            let gyroscope = latestGyroscopeData
-        else {
-            return
-        }
-
-        // Write the row to the CSV with the most recent timestamp
-        let timestamp = max(accelerometer.timestamp, gyroscope.timestamp)
-        imuEncoder.add(
-            timestamp: timestamp,
-            linear: accelerometer.data,
-            angular: gyroscope.data
-        )
-
-        // Clear the buffers after writing
-        latestAccelerometerData = nil
-        latestGyroscopeData = nil
-    }
-
-    func wrapUp() {
-        dispatchGroup.wait()
-        self.rgbEncoder.finishEncoding()
-        self.imuEncoder.done()
-        self.odometryEncoder.done()
-        self.distortionEncoder.done()
+    /// Finishes the stream, waits until every queued item has been written,
+    /// finalizes all files, and returns the aggregated status.
+    func wrapUp() async -> Status {
+        continuation.finish()
+        await writerTask.value
+        let writersOK = await writer.finish()
         writeIntrinsics()
-        switch self.rgbEncoder.status {
-            case .allGood:
-                status = .allGood
-            case .error:
-                status = .videoEncodingError
+        if directoryError {
+            return .directoryCreationError
         }
-        switch self.depthEncoder.status {
-            case .allGood:
-                status = .allGood
-            case .frameEncodingError:
-                status = .videoEncodingError
-                print("Something went wrong encoding depth.")
-        }
-        switch self.confidenceEncoder.status {
-            case .allGood:
-                status = .allGood
-            case .encodingError:
-                status = .videoEncodingError
-                print("Something went wrong encoding confidence values.")
-        }
+        return writersOK ? .allGood : .videoEncodingError
     }
 
     private func writeIntrinsics() {
-        if let cameraMatrix = lastFrame?.camera.intrinsics {
+        if let cameraMatrix = latestIntrinsics {
             let rows = cameraMatrix.transpose.columns
             var csv: [String] = []
             for row in [rows.0, rows.1, rows.2] {
@@ -258,19 +247,20 @@ class DatasetEncoder {
         }
     }
 
-    static private func createDirectory(id: inout UUID) -> URL {
+    static private func createDirectory(id: inout UUID, error directoryError: inout Bool) -> URL {
         let directoryId = hashUUID(id: id)
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         var directory = URL(fileURLWithPath: directoryId, relativeTo: url)
-        if FileManager.default.fileExists(atPath: directory.absoluteString) {
+        if FileManager.default.fileExists(atPath: directory.path) {
             // Just in case the first 5 characters clash, try again.
             id = UUID()
-            directory = DatasetEncoder.createDirectory(id: &id)
+            directory = DatasetEncoder.createDirectory(id: &id, error: &directoryError)
         }
         do {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
         } catch let error as NSError {
             print("Error creating directory. \(error), \(error.userInfo)")
+            directoryError = true
         }
         return directory
     }
@@ -283,7 +273,101 @@ class DatasetEncoder {
         digest.makeIterator().prefix(5).forEach { (byte: UInt8) in
             string += String(format: "%02x", byte)
         }
-        print("Hash: \(string)")
         return string
+    }
+}
+
+/// Single consumer of the encoding stream. Serial by construction, which keeps
+/// writes FIFO: presentation times stay monotonic and frame numbering stays
+/// contiguous across all per-frame outputs.
+actor FrameWriter {
+    private let rgbEncoder: VideoEncoder
+    private let depthEncoder: DepthEncoder
+    private let confidenceEncoder: ConfidenceEncoder
+    private let odometryEncoder: OdometryEncoder
+    private let imuEncoder: IMUEncoder
+    private let distortionEncoder: DistortionEncoder
+    private let inFlight: InFlightFrames
+    private var latestAccelerometer: (timestamp: Double, value: simd_double3)?
+    private var latestGyroscope: (timestamp: Double, value: simd_double3)?
+
+    init(datasetDirectory: URL, rgbFilePath: URL, depthFilePath: URL, width: CGFloat, height: CGFloat, inFlight: InFlightFrames) {
+        self.inFlight = inFlight
+        self.rgbEncoder = VideoEncoder(file: rgbFilePath, width: width, height: height)
+        self.depthEncoder = DepthEncoder(outDirectory: depthFilePath)
+        let confidencePath = datasetDirectory.appendingPathComponent("confidence", isDirectory: true)
+        self.confidenceEncoder = ConfidenceEncoder(outDirectory: confidencePath)
+        let odometryPath = datasetDirectory.appendingPathComponent("odometry.csv", isDirectory: false)
+        self.odometryEncoder = OdometryEncoder(url: odometryPath)
+        let imuPath = datasetDirectory.appendingPathComponent("imu.csv", isDirectory: false)
+        self.imuEncoder = IMUEncoder(url: imuPath)
+        self.distortionEncoder = DistortionEncoder(datasetDirectory: datasetDirectory)
+    }
+
+    func run(_ items: AsyncStream<DatasetEncoder.Item>) async {
+        for await item in items {
+            switch item {
+            case .frame(let frame, let number):
+                if let depth = frame.depth {
+                    depthEncoder.encodeFrame(frame: depth, frameNumber: number)
+                    if let confidence = frame.confidence {
+                        confidenceEncoder.encodeFrame(frame: confidence, frameNumber: number)
+                    }
+                }
+                await rgbEncoder.add(frame: VideoEncoderInput(buffer: frame.image, time: frame.timestamp), currentFrame: number)
+                odometryEncoder.add(
+                    timestamp: frame.timestamp,
+                    transform: frame.transform,
+                    intrinsics: frame.intrinsics,
+                    distortionCenter: frame.distortionCenter,
+                    currentFrame: number)
+                distortionEncoder.add(lookupTable: frame.distortionTable, currentFrame: number)
+                inFlight.release()
+            case .accelerometer(let timestamp, let value):
+                latestAccelerometer = (timestamp, value)
+                tryWritingIMUData()
+            case .gyroscope(let timestamp, let value):
+                latestGyroscope = (timestamp, value)
+                tryWritingIMUData()
+            }
+        }
+    }
+
+    /// Finalizes all output files. Returns true when every encoder finished cleanly.
+    func finish() async -> Bool {
+        let rgbStatus = await rgbEncoder.finishEncoding()
+        imuEncoder.done()
+        odometryEncoder.done()
+        distortionEncoder.done()
+        if depthEncoder.status != .allGood {
+            print("Something went wrong encoding depth.")
+        }
+        if confidenceEncoder.status != .allGood {
+            print("Something went wrong encoding confidence values.")
+        }
+        return rgbStatus == .allGood
+            && depthEncoder.status == .allGood
+            && confidenceEncoder.status == .allGood
+    }
+
+    private func tryWritingIMUData() {
+        guard
+            let accelerometer = latestAccelerometer,
+            let gyroscope = latestGyroscope
+        else {
+            return
+        }
+
+        // Write the row to the CSV with the most recent timestamp
+        let timestamp = max(accelerometer.timestamp, gyroscope.timestamp)
+        imuEncoder.add(
+            timestamp: timestamp,
+            linear: accelerometer.value,
+            angular: gyroscope.value
+        )
+
+        // Clear the buffers after writing
+        latestAccelerometer = nil
+        latestGyroscope = nil
     }
 }

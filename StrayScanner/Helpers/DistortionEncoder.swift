@@ -7,10 +7,8 @@
 //
 
 import Foundation
-import ARKit
-import AVFoundation
 
-class DistortionEncoder {
+nonisolated final class DistortionEncoder {
     private let distortionDirectory: URL
     private var isInitialized = false
 
@@ -18,9 +16,8 @@ class DistortionEncoder {
         self.distortionDirectory = datasetDirectory.appendingPathComponent("distortion", isDirectory: true)
     }
 
-    func add(frame: ARFrame, currentFrame: Int) {
-        guard let calibration = frame.capturedDepthData?.cameraCalibrationData,
-              let lookupTable = calibration.lensDistortionLookupTable else { return }
+    func add(lookupTable: Data?, currentFrame: Int) {
+        guard let lookupTable else { return }
 
         if !isInitialized {
             isInitialized = true
