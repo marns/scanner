@@ -105,7 +105,12 @@ class RecordSessionViewController : UIViewController, @preconcurrency ARSessionD
         guard let encoder = datasetEncoder else { return }
         if self.motionManager.isAccelerometerAvailable {
             self.motionManager.accelerometerUpdateInterval = 1.0 / 1200.0 // Set update rate
-            self.motionManager.startAccelerometerUpdates(to: imuOperationQueue) { (data, error) in
+            // CoreMotion delivers these on imuOperationQueue (a background queue).
+            // Mark the handler @Sendable/nonisolated so the compiler doesn't infer
+            // MainActor isolation from this @MainActor context; otherwise the Swift
+            // runtime injects a main-queue assertion that traps when CoreMotion
+            // invokes the block off the main thread.
+            self.motionManager.startAccelerometerUpdates(to: imuOperationQueue) { @Sendable (data, error) in
                 guard let data = data else {
                     if let error = error {
                         print("Error retrieving accelerometer data: \(error.localizedDescription)")
@@ -120,7 +125,7 @@ class RecordSessionViewController : UIViewController, @preconcurrency ARSessionD
 
         if self.motionManager.isGyroAvailable {
             self.motionManager.gyroUpdateInterval = 1.0 / 1200.0 // Set update rate
-            self.motionManager.startGyroUpdates(to: imuOperationQueue) { (data, error) in
+            self.motionManager.startGyroUpdates(to: imuOperationQueue) { @Sendable (data, error) in
                 guard let data = data else {
                     if let error = error {
                         print("Error retrieving gyroscope data: \(error.localizedDescription)")

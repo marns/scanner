@@ -8,14 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		38045D582561A7370004F23C /* SessionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D572561A7370004F23C /* SessionRow.swift */; };
-		AA0000020000000000000001 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
-		AA0000020000000000000002 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
-		AA0000020000000000000003 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
-		AA0000020000000000000004 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
-		AA0000020000000000000005 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
-		AA0000020000000000000006 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
-		AA0000020000000000000007 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
-		AA0000020000000000000008 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
 		38045D5A2561AC000004F23C /* SessionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38045D592561AC000004F23C /* SessionList.swift */; };
 		380B9189259B39E300580D30 /* RecordSessionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 380B9188259B39E300580D30 /* RecordSessionView.xib */; };
 		385999C625616F3000F3F681 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 385999C525616F3000F3F681 /* Assets.xcassets */; };
@@ -50,8 +42,6 @@
 		38694C8126D2C66F00546EA1 /* DepthEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38694C7226D2C66F00546EA1 /* DepthEncoder.swift */; };
 		38694C8226D2C66F00546EA1 /* AppDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38694C7326D2C66F00546EA1 /* AppDaemon.swift */; };
 		38694C8326D2C66F00546EA1 /* AppDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38694C7326D2C66F00546EA1 /* AppDaemon.swift */; };
-		70D1234B2E1800000027BEEF /* DistortionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D1234A2E1800000027BEEF /* DistortionEncoder.swift */; };
-		70D1234C2E1800000027BEEF /* DistortionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D1234A2E1800000027BEEF /* DistortionEncoder.swift */; };
 		386E277825991163007D023B /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E277725991163007D023B /* RecordButton.swift */; };
 		3872B88925962BBA00A3370C /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3872B88825962BBA00A3370C /* Colors.xcassets */; };
 		387B578125EA5BB900132903 /* StrayScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B578025EA5BB900132903 /* StrayScannerTests.swift */; };
@@ -66,6 +56,16 @@
 		70849EC52E0E4CE2007E1315 /* SettingsConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */; };
 		709259192E0B79AB00A7B62E /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
 		70CF35492E17803700276207 /* ShareUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709259182E0B79AB00A7B62E /* ShareUtility.swift */; };
+		70D1234B2E1800000027BEEF /* DistortionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D1234A2E1800000027BEEF /* DistortionEncoder.swift */; };
+		70D1234C2E1800000027BEEF /* DistortionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D1234A2E1800000027BEEF /* DistortionEncoder.swift */; };
+		AA0000020000000000000001 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
+		AA0000020000000000000002 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
+		AA0000020000000000000003 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
+		AA0000020000000000000004 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000001 /* Recording.swift */; };
+		AA0000020000000000000005 /* StrayScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000002 /* StrayScannerApp.swift */; };
+		AA0000020000000000000006 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000003 /* PersistenceController.swift */; };
+		AA0000020000000000000007 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
+		AA0000020000000000000008 /* DepthPngEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000010000000000000004 /* DepthPngEncoder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,10 +80,6 @@
 
 /* Begin PBXFileReference section */
 		38045D572561A7370004F23C /* SessionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRow.swift; sourceTree = "<group>"; };
-		AA0000010000000000000001 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
-		AA0000010000000000000002 /* StrayScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrayScannerApp.swift; sourceTree = "<group>"; };
-		AA0000010000000000000003 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
-		AA0000010000000000000004 /* DepthPngEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthPngEncoder.swift; sourceTree = "<group>"; };
 		38045D592561AC000004F23C /* SessionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionList.swift; sourceTree = "<group>"; };
 		380B9188259B39E300580D30 /* RecordSessionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecordSessionView.xib; sourceTree = "<group>"; };
 		385999B925616F2B00F3F681 /* StrayScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StrayScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +97,6 @@
 		38694C7126D2C66F00546EA1 /* OdometryEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OdometryEncoder.swift; sourceTree = "<group>"; };
 		38694C7226D2C66F00546EA1 /* DepthEncoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepthEncoder.swift; sourceTree = "<group>"; };
 		38694C7326D2C66F00546EA1 /* AppDaemon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDaemon.swift; sourceTree = "<group>"; };
-		70D1234A2E1800000027BEEF /* DistortionEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistortionEncoder.swift; sourceTree = "<group>"; };
 		386E277725991163007D023B /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		3872B88825962BBA00A3370C /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		387B577E25EA5BB900132903 /* StrayScannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StrayScannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +113,11 @@
 		70849EBF2E0E46B1007E1315 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		70849EC22E0E4CE2007E1315 /* SettingsConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsConstants.swift; sourceTree = "<group>"; };
 		709259182E0B79AB00A7B62E /* ShareUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareUtility.swift; sourceTree = "<group>"; };
+		70D1234A2E1800000027BEEF /* DistortionEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistortionEncoder.swift; sourceTree = "<group>"; };
+		AA0000010000000000000001 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		AA0000010000000000000002 /* StrayScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrayScannerApp.swift; sourceTree = "<group>"; };
+		AA0000010000000000000003 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		AA0000010000000000000004 /* DepthPngEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepthPngEncoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -646,10 +646,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_VERSION = "6.0";
+				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -674,10 +674,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScanner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_VERSION = "6.0";
+				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -701,10 +701,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScannerDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_VERSION = "6.0";
+				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -728,10 +728,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.keke.StrayScannerDebug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_VERSION = "6.0";
+				SWIFT_OBJC_BRIDGING_HEADER = StrayScanner/BridgeHeader.h;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
