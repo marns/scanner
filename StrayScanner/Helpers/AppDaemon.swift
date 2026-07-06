@@ -7,54 +7,32 @@
 //
 
 import Foundation
-import CoreData
-import UIKit
+import SwiftData
 
-class AppDaemon {
-    private let dataContext: NSManagedObjectContext?
-
-    init(appDelegate: AppDelegate) {
-        dataContext = appDelegate.persistentContainer.viewContext
-    }
-
-    public func removeDeletedEntries() {
-        let request = NSFetchRequest<NSManagedObject>(entityName: "Recording")
+@MainActor
+enum AppDaemon {
+    /// Removes recordings whose dataset folder no longer exists on disk. This
+    /// is the main mechanism through which datasets are "exported": the user
+    /// moves or deletes the folder via Finder/iTunes or the Files app, and the
+    /// corresponding entry is cleaned up here on next launch.
+    static func removeDeletedEntries(context: ModelContext) {
+        let descriptor = FetchDescriptor<Recording>()
         do {
-            let fetched: [NSManagedObject] = try dataContext?.fetch(request) ?? []
-            let sessions = fetched.map { session in
-                return session as! Recording
-            }
-            sessions.forEach { session in
-                if let path = session.absoluteRgbPath() {
-                    let enclosingFolder = path.deletingLastPathComponent()
-                    if !FileManager.default.fileExists(atPath: enclosingFolder.path) {
-                        // This means that the files have been removed from the device.
-                        // For example through finder/iTunes.
-                        // This is the main mechanism through which datasets are exported.
-                        print("The dataset folder has been removed.")
-                        DispatchQueue.main.async {
-                            self.removeEntry(session)
-                        }
-                    }
-                } else {
-                    print("Session \(session) does not have an rgb file.")
+            let recordings = try context.fetch(descriptor)
+            for recording in recordings {
+                guard let path = recording.absoluteRgbPath() else {
+                    print("Session \(recording.id) does not have an rgb file.")
+                    continue
+                }
+                let enclosingFolder = path.deletingLastPathComponent()
+                if !FileManager.default.fileExists(atPath: enclosingFolder.path) {
+                    recording.deleteFiles()
+                    context.delete(recording)
                 }
             }
-
-            NotificationCenter.default.post(name: NSNotification.Name("sessionsChanged"), object: nil)
+            try context.save()
         } catch let error as NSError {
-            print("Something went wrong. Error: \(error), \(error.userInfo)")
-        }
-        
-    }
-
-    private func removeEntry(_ session: Recording) {
-        session.deleteFiles()
-        self.dataContext?.delete(session)
-        do {
-            try self.dataContext?.save()
-        } catch let error as NSError {
-            print("Could not delete recording. \(error), \(error.userInfo)")
+            print("Something went wrong pruning deleted recordings. Error: \(error), \(error.userInfo)")
         }
     }
 }
