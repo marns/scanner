@@ -1,1 +1,11 @@
 *.png filter=lfs diff=lfs merge=lfs -text
+
+# Scrub the Apple Developer team ID out of the Xcode project before it is
+# committed. Xcode re-stamps DEVELOPMENT_TEAM into project.pbxproj on every
+# IDE build (automatic signing writes it at the target level). The `strip-team`
+# clean filter rewrites those values to "" on staging, so the team ID stays in
+# the local working tree — signing keeps working — but never lands in git.
+#
+# The filter is registered per-clone (not carried in the repo): run
+# ./scripts/setup-git-filters.sh after cloning.
+StrayScanner.xcodeproj/project.pbxproj filter=strip-team

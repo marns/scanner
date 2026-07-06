@@ -16,6 +16,11 @@ dependencies — open `StrayScanner.xcodeproj` directly and build to a LiDAR-equ
 device (iPhone 12 Pro or newer, or an iPad Pro from 2020 onwards). Recording requires
 real hardware; the simulator can build and run the UI but cannot capture datasets.
 
+After cloning, run `./scripts/setup-git-filters.sh` once. It installs a git clean
+filter that keeps your Apple Developer team ID — which Xcode writes into
+`project.pbxproj` when it resolves automatic signing — out of commits. Your local
+build is unaffected; set your team as usual in the Signing & Capabilities tab.
+
 The `scripts/integrate.py` helper visualizes a recorded dataset (coordinate frames,
 point clouds, or a TSDF-integrated mesh). It declares its dependencies inline, so it
 can be run directly with [uv](https://docs.astral.sh/uv/):
